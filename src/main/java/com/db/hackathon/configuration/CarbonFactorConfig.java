@@ -13,6 +13,8 @@ public class CarbonFactorConfig {
     private double irrigationOther;
     private double trees;
     private double biochar;
+    private double pricePerTonne;
+    private String currency;
 
     public double getFertilizer() { return fertilizer; }
     public void setFertilizer(double fertilizer) { this.fertilizer = fertilizer; }
@@ -34,4 +36,10 @@ public class CarbonFactorConfig {
 
     public double getBiochar() { return biochar; }
     public void setBiochar(double biochar) { this.biochar = biochar; }
+
+    public double getPricePerTonne() { return pricePerTonne; }
+    public void setPricePerTonne(double pricePerTonne) { this.pricePerTonne = pricePerTonne; }
+
+    public String getCurrency() { return currency; }
+    public void setCurrency(String currency) { this.currency = currency;  }
 }

@@ -46,9 +46,12 @@ public class CarbonOffsetService {
 
         double sequestrationTotal = treeSequestration + biocharSequestration + mlPredictionOffset;
         double totalOffset = sequestrationTotal - (totalEmissions + leakage + uncertainty);
+        double creditValue = totalOffset * config.getPricePerTonne();
 
         CarbonOffsetResponse res = new CarbonOffsetResponse();
         res.estimatedOffsetTCO2e = Math.round(totalOffset * 100.0) / 100.0;
+        res.estimatedCreditValue = Math.round(creditValue * 100.0) / 100.0;
+        res.currency = config.getCurrency();
 
         Map<String, Double> emissions = new HashMap<>();
         emissions.put("fertilizer", Math.round(fertilizerEmission * 10000.0) / 10000.0);

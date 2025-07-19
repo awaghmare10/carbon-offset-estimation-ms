@@ -1,0 +1,4 @@
+carbon:
+  factor:
+    pricePerTonne: 10.0
+    currency: "₹"
