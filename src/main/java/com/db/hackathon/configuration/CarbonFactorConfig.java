@@ -15,6 +15,8 @@ public class CarbonFactorConfig {
     private double biochar;
     private double pricePerTonne;
     private String currency;
+    private double noTillReductionFactor;
+    private double manureEmissionAddition;
 
     public double getFertilizer() { return fertilizer; }
     public void setFertilizer(double fertilizer) { this.fertilizer = fertilizer; }
@@ -41,5 +43,11 @@ public class CarbonFactorConfig {
     public void setPricePerTonne(double pricePerTonne) { this.pricePerTonne = pricePerTonne; }
 
     public String getCurrency() { return currency; }
-    public void setCurrency(String currency) { this.currency = currency;  }
+    public void setCurrency(String currency) { this.currency = currency; }
+
+    public double getNoTillReductionFactor() { return noTillReductionFactor; }
+    public void setNoTillReductionFactor(double noTillReductionFactor) { this.noTillReductionFactor = noTillReductionFactor; }
+
+    public double getManureEmissionAddition() { return manureEmissionAddition; }
+    public void setManureEmissionAddition(double manureEmissionAddition) { this.manureEmissionAddition = manureEmissionAddition;  }
 }

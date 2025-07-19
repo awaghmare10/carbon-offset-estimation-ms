@@ -29,16 +29,26 @@ public class CarbonOffsetService {
 
     public CarbonOffsetResponse estimateOffset(CarbonOffsetRequest req) {
         double fertilizerEmission = req.fertilizerNkgPerHa * req.areaHa * config.getFertilizer() * config.getGwpN2o() / 1000;
+
+        if (req.manureApplied) {
+            fertilizerEmission += config.getManureEmissionAddition();
+        }
+
         double fuelEmission = req.dieselLiters * config.getFuel() / 1000;
 
         Set<String> floodTypes = Set.of("flood", "furrow", "basin");
         boolean isFlood = req.irrigationType != null && floodTypes.contains(req.irrigationType.toLowerCase());
         double irrigationEmission = (isFlood ? req.areaHa * config.getIrrigationFlood() : req.areaHa * config.getIrrigationOther()) / 1000;
 
+        double totalEmissions = fertilizerEmission + fuelEmission + irrigationEmission;
+
+        if (req.noTill) {
+            totalEmissions *= config.getNoTillReductionFactor();
+        }
+
         double treeSequestration = req.treesPlanted * config.getTrees();
         double biocharSequestration = req.biocharTons * config.getBiochar();
 
-        double totalEmissions = fertilizerEmission + fuelEmission + irrigationEmission;
         double leakage = 0.1 * totalEmissions;
         double uncertainty = 0.2 * totalEmissions;
 
@@ -86,6 +96,8 @@ public class CarbonOffsetService {
                     case "area_ha" -> req.areaHa;
                     case "fertilizer_n_kg_per_ha" -> req.fertilizerNkgPerHa;
                     case "diesel_liters" -> req.dieselLiters;
+                    case "latitude" -> req.location != null ? req.location.lat : null;
+                    case "longitude" -> req.location != null ? req.location.lon : null;
                     default -> null;
                 };
                 features.put(inputField.getName(), inputField.prepare(rawValue));
