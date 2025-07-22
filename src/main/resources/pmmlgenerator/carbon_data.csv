@@ -1,5 +1,5 @@
-area_ha,fertilizer_n_kg_per_ha,diesel_liters,carbon_offset_tco2e
-1.0,50,100,1.2
-2.0,100,200,2.5
-3.0,150,300,3.8
-4.0,200,400,5.1
+area_ha,fertilizer_n_kg_per_ha,diesel_liters,latitude,longitude,carbon_offset_tco2e
+1.0,50,100,19.07,72.88,1.2
+2.0,100,200,19.07,72.88,2.5
+3.0,150,300,19.30,74.88,3.8
+4.0,200,400,20.07,78.88,5.1

@@ -28,8 +28,9 @@ public class CarbonOffsetService {
     private static final DecimalFormat fourDecimal = new DecimalFormat("#.####");
 
     public CarbonOffsetResponse estimateOffset(CarbonOffsetRequest req) {
-        double fertilizerEmission = req.fertilizerNkgPerHa * req.areaHa * config.getFertilizer() * config.getGwpN2o() / 1000;
+        double durationFactor = req.durationMonths / 12.0;
 
+        double fertilizerEmission = req.fertilizerNkgPerHa * req.areaHa * config.getFertilizer() * config.getGwpN2o() / 1000;
         if (req.manureApplied) {
             fertilizerEmission += config.getManureEmissionAddition();
         }
@@ -40,19 +41,24 @@ public class CarbonOffsetService {
         boolean isFlood = req.irrigationType != null && floodTypes.contains(req.irrigationType.toLowerCase());
         double irrigationEmission = (isFlood ? req.areaHa * config.getIrrigationFlood() : req.areaHa * config.getIrrigationOther()) / 1000;
 
+        // Scale emissions
+        fertilizerEmission *= durationFactor;
+        fuelEmission *= durationFactor;
+        irrigationEmission *= durationFactor;
+
         double totalEmissions = fertilizerEmission + fuelEmission + irrigationEmission;
 
         if (req.noTill) {
             totalEmissions *= config.getNoTillReductionFactor();
         }
 
-        double treeSequestration = req.treesPlanted * config.getTrees();
-        double biocharSequestration = req.biocharTons * config.getBiochar();
+        double treeSequestration = req.treesPlanted * config.getTrees() * durationFactor;
+        double biocharSequestration = req.biocharTons * config.getBiochar() * durationFactor;
 
         double leakage = 0.1 * totalEmissions;
         double uncertainty = 0.2 * totalEmissions;
 
-        double mlPredictionOffset = predictWithPMML(req);
+        double mlPredictionOffset = predictWithPMML(req) * durationFactor;
 
         double sequestrationTotal = treeSequestration + biocharSequestration + mlPredictionOffset;
         double totalOffset = sequestrationTotal - (totalEmissions + leakage + uncertainty);

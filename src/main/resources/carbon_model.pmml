@@ -2,7 +2,7 @@
 <PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
 	<Header>
 		<Application name="SkLearn2PMML package" version="0.121.0"/>
-		<Timestamp>2025-07-19T12:38:19Z</Timestamp>
+		<Timestamp>2025-07-22T13:53:11Z</Timestamp>
 	</Header>
 	<MiningBuildTask>
 		<Extension name="repr">PMMLPipeline(steps=[('scaler', StandardScaler()),
@@ -13,40 +13,62 @@
 		<DataField name="area_ha" optype="continuous" dataType="double"/>
 		<DataField name="fertilizer_n_kg_per_ha" optype="continuous" dataType="double"/>
 		<DataField name="diesel_liters" optype="continuous" dataType="double"/>
+		<DataField name="latitude" optype="continuous" dataType="double"/>
+		<DataField name="longitude" optype="continuous" dataType="double"/>
 	</DataDictionary>
 	<MiningModel functionName="regression" algorithmName="sklearn.ensemble._forest.RandomForestRegressor">
 		<MiningSchema>
 			<MiningField name="carbon_offset_tco2e" usageType="target"/>
-			<MiningField name="area_ha"/>
 			<MiningField name="diesel_liters"/>
 			<MiningField name="fertilizer_n_kg_per_ha"/>
+			<MiningField name="area_ha"/>
+			<MiningField name="latitude"/>
+			<MiningField name="longitude"/>
 		</MiningSchema>
 		<LocalTransformations>
 			<DerivedField name="standardScaler(area_ha)" optype="continuous" dataType="double">
 				<Apply function="/">
 					<Apply function="-">
 						<FieldRef field="area_ha"/>
-						<Constant dataType="double">2.5</Constant>
+						<Constant dataType="double">3.5</Constant>
 					</Apply>
-					<Constant dataType="double">1.118033988749895</Constant>
+					<Constant dataType="double">1.707825127659933</Constant>
 				</Apply>
 			</DerivedField>
 			<DerivedField name="standardScaler(fertilizer_n_kg_per_ha)" optype="continuous" dataType="double">
 				<Apply function="/">
 					<Apply function="-">
 						<FieldRef field="fertilizer_n_kg_per_ha"/>
-						<Constant dataType="double">125.0</Constant>
+						<Constant dataType="double">175.0</Constant>
 					</Apply>
-					<Constant dataType="double">55.90169943749474</Constant>
+					<Constant dataType="double">85.39125638299666</Constant>
 				</Apply>
 			</DerivedField>
 			<DerivedField name="standardScaler(diesel_liters)" optype="continuous" dataType="double">
 				<Apply function="/">
 					<Apply function="-">
 						<FieldRef field="diesel_liters"/>
-						<Constant dataType="double">250.0</Constant>
+						<Constant dataType="double">350.0</Constant>
 					</Apply>
-					<Constant dataType="double">111.80339887498948</Constant>
+					<Constant dataType="double">170.78251276599332</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="standardScaler(latitude)" optype="continuous" dataType="double">
+				<Apply function="/">
+					<Apply function="-">
+						<FieldRef field="latitude"/>
+						<Constant dataType="double">23.236666666666665</Constant>
+					</Apply>
+					<Constant dataType="double">3.1841621957571338</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="standardScaler(longitude)" optype="continuous" dataType="double">
+				<Apply function="/">
+					<Apply function="-">
+						<FieldRef field="longitude"/>
+						<Constant dataType="double">77.88</Constant>
+					</Apply>
+					<Constant dataType="double">3.415650255319866</Constant>
 				</Apply>
 			</DerivedField>
 			<DerivedField name="float(standardScaler(area_ha))" optype="continuous" dataType="float">
@@ -58,8 +80,11 @@
 			<DerivedField name="float(standardScaler(diesel_liters))" optype="continuous" dataType="float">
 				<FieldRef field="standardScaler(diesel_liters)"/>
 			</DerivedField>
-			<DerivedField name="double(float(standardScaler(area_ha)))" optype="continuous" dataType="double">
-				<FieldRef field="float(standardScaler(area_ha))"/>
+			<DerivedField name="float(standardScaler(latitude))" optype="continuous" dataType="float">
+				<FieldRef field="standardScaler(latitude)"/>
+			</DerivedField>
+			<DerivedField name="float(standardScaler(longitude))" optype="continuous" dataType="float">
+				<FieldRef field="standardScaler(longitude)"/>
 			</DerivedField>
 			<DerivedField name="double(float(standardScaler(diesel_liters)))" optype="continuous" dataType="double">
 				<FieldRef field="float(standardScaler(diesel_liters))"/>
@@ -67,21 +92,34 @@
 			<DerivedField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))" optype="continuous" dataType="double">
 				<FieldRef field="float(standardScaler(fertilizer_n_kg_per_ha))"/>
 			</DerivedField>
+			<DerivedField name="double(float(standardScaler(area_ha)))" optype="continuous" dataType="double">
+				<FieldRef field="float(standardScaler(area_ha))"/>
+			</DerivedField>
+			<DerivedField name="double(float(standardScaler(latitude)))" optype="continuous" dataType="double">
+				<FieldRef field="float(standardScaler(latitude))"/>
+			</DerivedField>
+			<DerivedField name="double(float(standardScaler(longitude)))" optype="continuous" dataType="double">
+				<FieldRef field="float(standardScaler(longitude))"/>
+			</DerivedField>
 		</LocalTransformations>
 		<Segmentation multipleModelMethod="average" missingPredictionTreatment="returnMissing">
 			<Segment id="1">
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
-						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="6.4">
 						<True/>
-						<Node score="2.5">
-							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.0"/>
+						<Node score="3.7999999999999994">
+							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.0"/>
+							<Node score="2.5">
+								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.5855400562286377"/>
+							</Node>
 						</Node>
-						<Node score="3.8">
-							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.8944272100925446"/>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.5855400562286377"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -90,12 +128,20 @@
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
-						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(latitude)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="7.7">
 						<True/>
-						<Node score="3.8">
-							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.8944272100925446"/>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.8783100843429565"/>
+							<Node score="3.8">
+								<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.0"/>
+								<Node score="2.5">
+									<SimplePredicate field="double(float(standardScaler(latitude)))" operator="lessOrEqual" value="-0.6804511100053787"/>
+								</Node>
+							</Node>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -104,16 +150,23 @@
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
-						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
-						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(latitude)))"/>
+						<MiningField name="double(float(standardScaler(longitude)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="7.7">
 						<True/>
-						<Node score="1.2">
-							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="-0.44721361994743347"/>
-						</Node>
 						<Node score="3.8">
-							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.8944272100925446"/>
+							<SimplePredicate field="double(float(standardScaler(latitude)))" operator="lessOrEqual" value="0.2617119699716568"/>
+							<Node score="1.2">
+								<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="-1.1710801124572754"/>
+							</Node>
+							<Node score="2.5">
+								<SimplePredicate field="double(float(standardScaler(latitude)))" operator="lessOrEqual" value="-0.6804511100053787"/>
+							</Node>
+						</Node>
+						<Node score="6.4">
+							<SimplePredicate field="double(float(standardScaler(longitude)))" operator="lessOrEqual" value="1.1710801124572754"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -123,14 +176,23 @@
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
 						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(longitude)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="7.7">
 						<True/>
-						<Node score="2.5">
-							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.44721361994743347"/>
+						<Node score="3.8">
+							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.29277002811431885"/>
 							<Node score="1.2">
-								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.8944272100925446"/>
+								<SimplePredicate field="double(float(standardScaler(longitude)))" operator="lessOrEqual" value="-1.1710801124572754"/>
 							</Node>
+							<Node score="2.5">
+								<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="-0.5855400562286377"/>
+							</Node>
+						</Node>
+						<Node score="6.4">
+							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="1.1710801124572754"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -140,11 +202,18 @@
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
 						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
 					</MiningSchema>
-					<Node score="3.8">
+					<Node score="7.7">
 						<True/>
 						<Node score="2.5">
-							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.0"/>
+							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.29277002811431885"/>
+							<Node score="1.2">
+								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-1.1710801124572754"/>
+							</Node>
+						</Node>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.8783100843429565"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -153,12 +222,19 @@
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
-						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(area_ha)))"/>
 					</MiningSchema>
-					<Node score="3.8">
+					<Node score="7.7">
 						<True/>
-						<Node score="2.5">
-							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.0"/>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.8783100843429565"/>
+							<Node score="2.5">
+								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.5855400562286377"/>
+							</Node>
+							<Node score="3.8">
+								<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.0"/>
+							</Node>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -168,15 +244,19 @@
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
 						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
-						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(longitude)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="7.7">
 						<True/>
-						<Node score="2.5">
-							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.44721361994743347"/>
-							<Node score="1.2">
-								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.8944272100925446"/>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.5855400562286377"/>
+							<Node score="3.8">
+								<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.0"/>
 							</Node>
+						</Node>
+						<Node score="6.4">
+							<SimplePredicate field="double(float(standardScaler(longitude)))" operator="lessOrEqual" value="1.1710801124572754"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -185,12 +265,24 @@
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
+						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
 						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(longitude)))"/>
 					</MiningSchema>
-					<Node score="5.1">
+					<Node score="7.7">
 						<True/>
-						<Node score="3.7999999999999994">
-							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.8944272100925446"/>
+						<Node score="3.8">
+							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="0.0"/>
+							<Node score="2.5">
+								<SimplePredicate field="double(float(standardScaler(longitude)))" operator="lessOrEqual" value="-0.5855400562286377"/>
+								<Node score="1.2">
+									<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-1.1710801124572754"/>
+								</Node>
+							</Node>
+						</Node>
+						<Node score="5.1">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.8783100843429565"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -200,11 +292,19 @@
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
 						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
+						<MiningField name="double(float(standardScaler(longitude)))"/>
 					</MiningSchema>
-					<Node score="3.8">
+					<Node score="7.7">
 						<True/>
-						<Node score="1.2">
-							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-0.44721361994743347"/>
+						<Node score="3.8">
+							<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="0.29277002811431885"/>
+							<Node score="1.2">
+								<SimplePredicate field="double(float(standardScaler(longitude)))" operator="lessOrEqual" value="-0.8783100843429565"/>
+							</Node>
+						</Node>
+						<Node score="6.400000000000001">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="1.1710801124572754"/>
 						</Node>
 					</Node>
 				</TreeModel>
@@ -213,12 +313,19 @@
 				<True/>
 				<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
 					<MiningSchema>
-						<MiningField name="double(float(standardScaler(area_ha)))"/>
+						<MiningField name="double(float(standardScaler(diesel_liters)))"/>
+						<MiningField name="double(float(standardScaler(fertilizer_n_kg_per_ha)))"/>
 					</MiningSchema>
-					<Node score="2.5">
+					<Node score="7.7">
 						<True/>
-						<Node score="1.2">
-							<SimplePredicate field="double(float(standardScaler(area_ha)))" operator="lessOrEqual" value="-0.8944272100925446"/>
+						<Node score="2.5">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="0.0"/>
+							<Node score="1.2">
+								<SimplePredicate field="double(float(standardScaler(diesel_liters)))" operator="lessOrEqual" value="-1.1710801124572754"/>
+							</Node>
+						</Node>
+						<Node score="6.4">
+							<SimplePredicate field="double(float(standardScaler(fertilizer_n_kg_per_ha)))" operator="lessOrEqual" value="1.1710801124572754"/>
 						</Node>
 					</Node>
 				</TreeModel>

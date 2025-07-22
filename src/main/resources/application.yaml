@@ -1,4 +1,4 @@
 carbon:
   factor:
-    pricePerTonne: 10.0
+    pricePerTonne: 20.0
     currency: "₹"

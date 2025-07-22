@@ -11,6 +11,7 @@ public class CarbonOffsetRequest {
     public int treesPlanted;
     public double biocharTons;
     public Location location;
+    public int durationMonths ;
 
     public static class Location {
         public double lat;

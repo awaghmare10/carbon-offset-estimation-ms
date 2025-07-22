@@ -18,6 +18,7 @@ public class CarbonFactorConfig {
     private double noTillReductionFactor;
     private double manureEmissionAddition;
 
+
     public double getFertilizer() { return fertilizer; }
     public void setFertilizer(double fertilizer) { this.fertilizer = fertilizer; }
 
