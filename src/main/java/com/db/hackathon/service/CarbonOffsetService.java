@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -90,8 +91,10 @@ public class CarbonOffsetService {
 
 
     private double predictWithPMML(CarbonOffsetRequest req) {
-        try (FileInputStream fis = new FileInputStream("src/main/resources/carbon_model.pmml")) {
-            PMML pmml = PMMLUtil.unmarshal(fis);
+         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream("models/carbon_model.pmml")){
+            PMML pmml = PMMLUtil.unmarshal(inputStream);
+                //FileInputStream fis = new FileInputStream("src/main/resources/carbon_model.pmml")) {
+           // PMML pmml = PMMLUtil.unmarshal(fis);
             ModelEvaluator<?> evaluator = new ModelEvaluatorBuilder(pmml).build();
             evaluator.verify();
 
